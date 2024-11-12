@@ -1,0 +1,8 @@
+{
+    "image": "mcr.microsoft.com/vscode/devcontainers/javascript-node:0-14",
+    "features": {
+       "ghcr.io/devcontainers/features/mongodb:1": {}
+    },
+    "forwardPorts": [27017],
+    "postStartCommand": "node src/initDb.js"
+ }
