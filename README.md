@@ -25,7 +25,7 @@ npm install
 
     Crear un archivo .env en la raíz del proyecto y agregar las siguientes variables:
     ```
-    MONDODB_URI=mongodb://localhost:27017/
+    MONGODB_URI=mongodb://localhost:27017/
     NEO4J_URI=bolt://localhost:7687
     ```
 
