@@ -7,9 +7,24 @@
   },
   "scripts": {
     "test-mongo-connection": "node src/testMongoConnection.js",
-    "clean": "node src/scripts/initDb.js",
+    "clean": "node src/initDb.js",
     "help": "node src/scripts/help.js",
-    "m-CT": "node src/scripts/queries/getClientsWithPhones.js",
-    "m-JC": "node src/scripts/queries/getJacobCopperData.js"
+    "m1": "node src/scripts/queries/getClientsWithPhones.js",
+    "m2": "node src/scripts/queries/getJacobCopperData.js",
+    "m3": "node src/scripts/queries/getPhonesWithClientData.js",
+    "m4": "node src/scripts/queries/getClientsWithBills.js",
+    "m5": "node src/scripts/queries/getClientsWithoutBills.js",
+    "m6": "node src/scripts/queries/getClientsWithBillsCount.js",
+    "m7": "node src/scripts/queries/getKaiBullockBills.js",
+    "m8": "node src/scripts/queries/getProductsBilledAtLeastOnce.js",
+    "m9": "node src/scripts/queries/getBillsWithIpsumProducts.js",
+    "m10": "node src/scripts/queries/getClientsWithTotalSpent.js",
+    "m11": "node src/scripts/queries/getBillsOrderedByDate.js",
+    "m12": "node src/scripts/queries/getProductsNotBilled.js",
+    "m13.1": "node src/scripts/queries/createClient.js",
+    "m13.2": "node src/scripts/queries/deleteClient.js",
+    "m13.3": "node src/scripts/queries/updateClient.js",
+    "m14.1": "node src/scripts/queries/createProduct.js",
+    "m14.2": "node src/scripts/queries/updateProduct.js"
   }
 }
