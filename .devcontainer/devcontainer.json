@@ -11,6 +11,6 @@
     "terminal.integrated.shell.linux": "/bin/bash"
   },
   "forwardPorts": [27017],
-  "postCreateCommand": "npm install && node src/initDb.js && echo 'MONGODB_URI=mongodb://root:example@mongo:27017/\nNEO4J_URI=bolt://localhost:7687' > .env",
+  "postCreateCommand": "echo 'MONGODB_URI=mongodb://root:example@mongo:27017/\nNEO4J_URI=bolt://localhost:7687' > .env && npm install && node src/initDb.js",
   "remoteUser": "node"
 }
