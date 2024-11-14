@@ -1,6 +1,6 @@
 const commands = {
   "test-mongo-connection": "Prueba la conexión con MongoDB",
-  "init-db": "Inicializa la base de datos con datos de los CSV",
+  "clean": "Resetea la base de datos con los datos de los CSV originales",
   "m-CT": "Obtener los datos de los clientes junto con sus teléfonos utilizando mongoDB",
   "m-JC": "Obtener los teléfonos y el número de cliente de Jacob Cooper utilizando mongoDB",
   /*

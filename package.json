@@ -7,7 +7,7 @@
   },
   "scripts": {
     "test-mongo-connection": "node src/testMongoConnection.js",
-    "init-db": "node src/initDb.js",
+    "clean": "node src/scripts/initDb.js",
     "help": "node src/scripts/help.js",
     "m-CT": "node src/scripts/queries/getClientsWithPhones.js",
     "m-JC": "node src/scripts/queries/getJacobCopperData.js"
