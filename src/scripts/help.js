@@ -26,4 +26,19 @@ Object.entries(commands).forEach(([command, description]) => {
   console.log(`📋 npm run ${command.padEnd(25)} - ${description}`);
 });
 
+console.log('\n📌 Detalles de uso para m13.1:');
+console.log('   Para crear un nuevo cliente, use el siguiente formato:');
+console.log('   npm run m13.1 -- <nro_cliente> <nombre> <apellido> <direccion> <activo>');
+console.log('   Ejemplo: npm run m13.1 -- 12345 "Juan" "Pérez" "Calle Falsa 123" 1\n');
+
+console.log('\n📌 Detalles de uso para m13.2:');
+console.log('   Para eliminar un cliente, use el siguiente formato:');
+console.log('   npm run m13.2 -- <nro_cliente>');
+console.log('   Ejemplo: npm run m13.2 -- 12345\n');
+
+console.log('\n📌 Detalles de uso para m13.3:');
+console.log('   Para modificar un cliente, use el siguiente formato:');
+console.log('   npm run m13.3 -- <nro_cliente> <nombre> <apellido> <direccion> <activo>');
+console.log('   Ejemplo: npm run m13.3 -- 12345 "Juan" "Pérez" "Calle Nueva 456" 1\n');
+
 console.log('\n'); 
