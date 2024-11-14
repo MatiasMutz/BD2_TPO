@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const Cliente = require('../../models/clienteModel');
-const Factura = require('../../models/facturaModel');
+const Cliente = require('../../../models/clienteModel');
+const Factura = require('../../../models/facturaModel');
 require('dotenv').config();
 
 async function getClientsWithTotalSpent(){

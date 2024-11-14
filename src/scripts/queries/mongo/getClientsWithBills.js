@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
-const Cliente = require('../../models/clienteModel');
-const Factura = require('../../models/facturaModel');
-const Telefono = require('../../models/telefonoModel');
+const Cliente = require('../../../models/clienteModel');
+const Factura = require('../../../models/facturaModel');
+const Telefono = require('../../../models/telefonoModel');
 require('dotenv').config();
 
-async function getClientsWithoutBills() {
-    console.log('\n🔍 Buscando clientes sin facturas...');
+async function getClientsWithBills() {
+    console.log('\n🔍 Buscando clientes con facturas...');
     try {
         await mongoose.connect(process.env.MONGODB_URI);
 
@@ -20,17 +20,17 @@ async function getClientsWithoutBills() {
             },
             {
                 $match: {
-                    facturas: { $size: 0 }
+                    'facturas': { $ne: [] }
                 }
             },
         ]);
 
         if (!clientes.length) {
-            console.log('✅ Todos los clientes tienen facturas');
+            console.log('❌ No hay clientes con facturas');
             return;
         }
 
-        console.log(`📋 Se encontraron ${clientes.length} clientes sin facturas:\n\n`);
+        console.log(`📋 Se encontraron ${clientes.length} clientes con facturas:\n\n`);
 
         console.log('--------------------------');
         clientes.forEach(cliente => {
@@ -47,4 +47,4 @@ async function getClientsWithoutBills() {
     }
 }
 
-getClientsWithoutBills();
+getClientsWithBills();

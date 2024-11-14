@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Cliente = require('../../models/clienteModel');
+const Cliente = require('../../../models/clienteModel');
 require('dotenv').config();
 
 async function updateClient(nro_cliente, updates) {

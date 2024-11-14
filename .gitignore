@@ -7,3 +7,11 @@ package-lock.json
 
 # Archivos temporales
 .DS_Store
+
+# Archivos de Neo4j
+1_constraints.cypher
+2_clients.cypher
+3_phones.cypher
+4_invoices.cypher
+5_invoice_details.cypher
+6_products.cypher

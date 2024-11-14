@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const Factura = require('../../models/detalleFacturaModel');
-const Producto = require('../../models/productoModel');
+const Factura = require('../../../models/detalleFacturaModel');
+const Producto = require('../../../models/productoModel');
 require('dotenv').config();
 
 async function getProductsBilledAtLeastOnce() {

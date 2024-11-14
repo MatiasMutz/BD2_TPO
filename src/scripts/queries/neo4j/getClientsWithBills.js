@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
-const Cliente = require('../../models/clienteModel');
-const Factura = require('../../models/facturaModel');
-const Telefono = require('../../models/telefonoModel');
+const Cliente = require('../../../models/clienteModel');
+const Factura = require('../../../models/facturaModel');
+const Telefono = require('../../../models/telefonoModel');
 require('dotenv').config();
 
 async function getClientsWithBills() {

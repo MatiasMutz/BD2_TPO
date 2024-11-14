@@ -1,9 +1,11 @@
 const mongoose = require('mongoose');
-const Cliente = require('../../models/clienteModel');
+const Cliente = require('../../../models/clienteModel');
+const Factura = require('../../../models/facturaModel');
+const Telefono = require('../../../models/telefonoModel');
 require('dotenv').config();
 
-async function getClientsWithBillsCount() {
-    console.log('\n🔍 Obteniendo clientes con su cantidad de facturas...');
+async function getClientsWithoutBills() {
+    console.log('\n🔍 Buscando clientes sin facturas...');
     try {
         await mongoose.connect(process.env.MONGODB_URI);
 
@@ -17,32 +19,24 @@ async function getClientsWithBillsCount() {
                 }
             },
             {
-                $project: {
-                    _id: 0,
-                    nro_cliente: 1,
-                    nombre: 1,
-                    apellido: 1,
-                    cantidad_facturas: { $size: '$facturas' }
+                $match: {
+                    facturas: { $size: 0 }
                 }
             },
-            {
-                $sort: {
-                    cantidad_facturas: -1
-                }
-            }
         ]);
 
         if (!clientes.length) {
-            console.log('❌ No se encontraron clientes');
+            console.log('✅ Todos los clientes tienen facturas');
             return;
         }
 
-        console.log(`📋 Se encontraron ${clientes.length} clientes\n\n`);
-        
+        console.log(`📋 Se encontraron ${clientes.length} clientes sin facturas:\n\n`);
+
         console.log('--------------------------');
         clientes.forEach(cliente => {
-            console.log(`👤 ${cliente.apellido}, ${cliente.nombre}`);
-            console.log(`📊 Cantidad de facturas: ${cliente.cantidad_facturas}`);
+            console.log(`👤 ${cliente.nombre} ${cliente.apellido}`);
+            console.log(`📄 Número de cliente: ${cliente.nro_cliente}`);
+            console.log(`📍 Dirección: ${cliente.direccion}`);
             console.log('--------------------------');
         });
 
@@ -53,4 +47,4 @@ async function getClientsWithBillsCount() {
     }
 }
 
-getClientsWithBillsCount(); 
+getClientsWithoutBills();

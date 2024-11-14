@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const Cliente = require('../../models/clienteModel');
-const Telefono = require('../../models/telefonoModel');
+const Cliente = require('../../../models/clienteModel');
+const Telefono = require('../../../models/telefonoModel');
 require('dotenv').config();
 
 async function getClientesConTelefonos() {

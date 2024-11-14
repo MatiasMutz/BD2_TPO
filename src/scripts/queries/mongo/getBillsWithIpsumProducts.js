@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-const Factura = require("../../models/facturaModel");
-const DetalleFactura = require("../../models/detalleFacturaModel");
+const Factura = require("../../../models/facturaModel");
+const DetalleFactura = require("../../../models/detalleFacturaModel");
 require("dotenv").config();
 
 async function getBillsWithIpsumProducts() {

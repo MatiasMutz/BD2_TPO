@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Producto = require('../../models/productoModel');
+const Producto = require('../../../models/productoModel');
 require('dotenv').config();
 
 async function createProduct(codigo_producto, nombre, marca, descripcion, precio, stock) {

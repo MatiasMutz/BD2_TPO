@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Factura = require('../../models/facturaModel');
+const Factura = require('../../../models/facturaModel');
 require('dotenv').config();
 
 async function getClientsWithBillsCount() {
