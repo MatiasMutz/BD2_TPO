@@ -38,7 +38,17 @@ console.log('   Ejemplo: npm run m13.2 -- 12345\n');
 
 console.log('\n📌 Detalles de uso para m13.3:');
 console.log('   Para modificar un cliente, use el siguiente formato:');
-console.log('   npm run m13.3 -- <nro_cliente> <nombre> <apellido> <direccion> <activo>');
-console.log('   Ejemplo: npm run m13.3 -- 12345 "Juan" "Pérez" "Calle Nueva 456" 1\n');
+console.log('   npm run m13.3 -- <nro_cliente> <propiedad>=<valor>'); // TODO: change comment
+console.log('   Ejemplo: npm run m13.3 -- 12345 "direccion"="Calle Nueva 456"\n');
+
+console.log('\n📌 Detalles de uso para m14.1:');
+console.log('   Para crear un nuevo producto, use el siguiente formato:');
+console.log('   npm run m14.1 -- <nro_producto> <nombre> <marca> <descripcion> <precio> <stock>');
+console.log('   Ejemplo: npm run m14.1 -- 12345 "Producto 1" "Marca 1" "Descripción 1" 100 10\n');
+
+console.log('\n📌 Detalles de uso para m14.2:');
+console.log('   Para modificar un producto, use el siguiente formato:');
+console.log('   npm run m14.2 -- <nro_producto> <propiedad>=<valor>');
+console.log('   Ejemplo: npm run m14.2 -- 12345 "precio"=100\n');
 
 console.log('\n'); 
