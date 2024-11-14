@@ -4,6 +4,7 @@ const Telefono = require('../../models/telefonoModel');
 require('dotenv').config();
 
 async function getClientesConTelefonos() {
+  console.log('\n🔍 Buscando clientes con sus telefonos...');
   try {
     await mongoose.connect(process.env.MONGODB_URI);
     
@@ -29,7 +30,7 @@ async function getClientesConTelefonos() {
     }
 
     clientes.forEach(cliente => {
-      console.log(`👤 ${cliente.nombre} ${cliente.apellido}`);
+      console.log(`👤 ${cliente.nombre} ${cliente.apellido} (${cliente.activo})`);
       console.log(`📍 Dirección: ${cliente.direccion}`);
       cliente.telefonos.forEach(telefono => {
         console.log(`📞 Teléfono: (${telefono.codigo_area}) ${telefono.nro_telefono} (${telefono.tipo})`);
