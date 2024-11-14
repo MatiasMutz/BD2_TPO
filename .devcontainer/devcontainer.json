@@ -1,8 +1,16 @@
 {
-    "image": "mcr.microsoft.com/vscode/devcontainers/javascript-node:0-14",
-    "features": {
-       "ghcr.io/devcontainers/features/mongodb:1": {}
-    },
-    "forwardPorts": [27017],
-    "postStartCommand": "node src/initDb.js"
- }
+  "name": "Node.js & MongoDB",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspace",
+  "extensions": [
+    "ms-azuretools.vscode-docker",
+    "mongodb.mongodb-vscode"
+  ],
+  "settings": {
+    "terminal.integrated.shell.linux": "/bin/bash"
+  },
+  "forwardPorts": [27017],
+  "postCreateCommand": "npm install && node src/initDb.js",
+  "remoteUser": "node"
+}
