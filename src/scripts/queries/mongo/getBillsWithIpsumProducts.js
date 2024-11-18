@@ -10,25 +10,22 @@ async function getBillsWithIpsumProducts() {
 
     const facturas = await Factura.aggregate([
       {
-        // First, join Factura with DetalleFactura based on nro_factura
         $lookup: {
-          from: "detallefacturas", // collection name in MongoDB
+          from: "detallefacturas",
           localField: "nro_factura",
           foreignField: "nro_factura",
           as: "detalles",
         },
       },
       {
-        // Now join with Producto based on codigo_producto
         $lookup: {
-          from: "productos", // collection name in MongoDB
+          from: "productos",
           localField: "detalles.codigo_producto",
           foreignField: "codigo_producto",
           as: "producto",
         },
       },
       {
-        // Filter for products where the brand (marca) is 'Ipsum'
         $match: {
           "producto.marca": "Ipsum",
         },

@@ -1,37 +1,51 @@
-const mongoose = require('mongoose');
-const Producto = require('../../../models/productoModel');
+const neo4j = require('neo4j-driver');
 require('dotenv').config();
 
 async function createProduct(codigo_producto, nombre, marca, descripcion, precio, stock) {
-    console.log('\n🔍 Creando un nuevo producto...');
-    try {
-        await mongoose.connect(process.env.MONGODB_URI);
+  console.log('\n🔍 Creando un nuevo producto...');
+  
+  try {
+    const session = await connectNeo4jDatabase();
 
-        const nuevoProducto = new Producto({
-            codigo_producto,
-            nombre,
-            marca,
-            descripcion,
-            precio,
-            stock
-        });
+    const result = await session.run(`
+      CREATE (p:Producto {
+        codigo_producto: $codigo_producto,
+        nombre: $nombre,
+        marca: $marca,
+        descripcion: $descripcion,
+        precio: $precio,
+        stock: $stock
+      })
+      RETURN p as nuevoProducto
+    `, {
+      codigo_producto: parseInt(codigo_producto),
+      nombre,
+      marca,
+      descripcion,
+      precio: parseInt(precio),
+      stock: parseInt(stock)
+    });
 
-        await nuevoProducto.save();
-        console.log('✅ Producto creado exitosamente:', nuevoProducto);
-
-    } catch (error) {
-        console.error('❌ Error al crear el producto:', error);
-    } finally {
-        await mongoose.connection.close();
+    if (result.records.length > 0) {
+      const nuevoProducto = result.records[0].get('nuevoProducto').properties;
+      console.log('✅ Producto creado exitosamente:', nuevoProducto);
     }
+
+  } catch (error) {
+    console.error('❌ Error al crear el producto:', error);
+  } finally {
+    await session.close();
+    await driver.close();
+  }
 }
 
+// Obtener argumentos de la línea de comandos
 const args = process.argv.slice(2);
 if (args.length !== 6) {
-    console.error('❌ Se requieren 6 argumentos: nro_producto, nombre, marca, descripcion, precio, stock');
-    process.exit(1);
+  console.error('❌ Se requieren 6 argumentos: codigo_producto, nombre, marca, descripcion, precio, stock');
+  process.exit(1);
 }
 
 const [codigo_producto, nombre, marca, descripcion, precio, stock] = args;
 
-createProduct(parseInt(codigo_producto), nombre, marca, descripcion, parseInt(precio), parseInt(stock)); 
+createProduct(codigo_producto, nombre, marca, descripcion, precio, stock); 

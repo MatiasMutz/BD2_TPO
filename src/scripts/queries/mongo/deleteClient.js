@@ -22,7 +22,6 @@ async function deleteClient(nro_cliente) {
     }
 }
 
-// Obtener argumentos de la línea de comandos
 const args = process.argv.slice(2);
 if (args.length !== 1) {
     console.error('❌ Se requiere 1 argumento: nro_cliente');
@@ -31,5 +30,4 @@ if (args.length !== 1) {
 
 const [nro_cliente] = args;
 
-// Convertir nro_cliente a número
 deleteClient(parseInt(nro_cliente)); 

@@ -40,8 +40,6 @@
     "n8": "node src/scripts/queries/neo4j/getProductsBilledAtLeastOnce.js",
     "n9": "node src/scripts/queries/neo4j/getBillsWithIpsumProducts.js",
     "n10": "node src/scripts/queries/neo4j/getClientsWithTotalSpent.js",
-    "n11": "node src/scripts/queries/neo4j/getBillsOrderedByDate.js",
-    "n12": "node src/scripts/queries/neo4j/getProductsNotBilled.js",
     "n13.1": "node src/scripts/queries/neo4j/createClient.js",
     "n13.2": "node src/scripts/queries/neo4j/deleteClient.js",
     "n13.3": "node src/scripts/queries/neo4j/updateClient.js",

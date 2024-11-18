@@ -11,7 +11,6 @@ async function createProductsNotBilledView() {
             await db.dropCollection('vista_productos_no_facturados');
             console.log('🗑️ Vista anterior eliminada');
         } catch (e) {
-            // Si la vista no existe, simplemente continuamos
         }
 
         await db.createCollection('vista_productos_no_facturados', {

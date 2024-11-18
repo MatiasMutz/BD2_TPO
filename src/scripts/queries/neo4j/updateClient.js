@@ -1,53 +1,64 @@
-const mongoose = require('mongoose');
-const Cliente = require('../../../models/clienteModel');
+const neo4j = require('neo4j-driver');
 require('dotenv').config();
 
 async function updateClient(nro_cliente, updates) {
-    console.log('\n🔍 Modificando cliente...');
-    try {
-        await mongoose.connect(process.env.MONGODB_URI);
+  console.log('\n🔍 Modificando cliente...');
+  
+  try {
+    const session = await connectNeo4jDatabase();
 
-        // Verificar si el cliente existe antes de intentar actualizarlo
-        const clienteExistente = await Cliente.findOne({ nro_cliente });
-        
-        if (!clienteExistente) {
-            console.log(`❌ No se encontró el cliente con el número ${nro_cliente}`);
-            return;
-        }
+    const checkResult = await session.run(`
+      MATCH (c:Cliente {nro_cliente: $nro_cliente})
+      RETURN c
+    `, {
+      nro_cliente: parseInt(nro_cliente)
+    });
 
-        const result = await Cliente.updateOne(
-            { nro_cliente },
-            { $set: updates }
-        );
-
-        if (result.modifiedCount > 0) {
-            const clienteModificado = await Cliente.findOne({ nro_cliente });
-            console.log('✅ Cliente modificado exitosamente:', clienteModificado);
-        } else {
-            console.log('⚠️ No se realizaron cambios en el cliente');
-        }
-
-    } catch (error) {
-        console.error('❌ Error al modificar el cliente:', error);
-    } finally {
-        await mongoose.connection.close();
+    if (checkResult.records.length === 0) {
+      console.log(`❌ No se encontró el cliente con el número ${nro_cliente}`);
+      return;
     }
+
+    const setClause = Object.entries(updates)
+      .map(([key, value]) => `c.${key} = $${key}`)
+      .join(', ');
+
+    const result = await session.run(`
+      MATCH (c:Cliente {nro_cliente: $nro_cliente})
+      SET ${setClause}
+      RETURN c as clienteModificado
+    `, {
+      nro_cliente: parseInt(nro_cliente),
+      ...updates
+    });
+
+    if (result.records.length > 0) {
+      const clienteModificado = result.records[0].get('clienteModificado').properties;
+      console.log('✅ Cliente modificado exitosamente:', clienteModificado);
+    } else {
+      console.log('⚠️ No se realizaron cambios en el cliente');
+    }
+
+  } catch (error) {
+    console.error('❌ Error al modificar el cliente:', error);
+  } finally {
+    await session.close();
+    await driver.close();
+  }
 }
 
-// Obtener argumentos de la línea de comandos
 const args = process.argv.slice(2);
 if (args.length < 2) {
-    console.error('❌ Se requiere al menos 2 argumentos: nro_cliente y al menos un campo a modificar');
-    process.exit(1);
+  console.error('❌ Se requiere al menos 2 argumentos: nro_cliente y al menos un campo a modificar');
+  process.exit(1);
 }
 
 const [id, ...fields] = args;
 
-// Convertir los campos a un objeto de actualizaciones
 const updates = {};
 fields.forEach(field => {
-    const [key, value] = field.split('=');
-    updates[key] = isNaN(value) ? value : parseInt(value);
+  const [key, value] = field.split('=');
+  updates[key] = isNaN(value) ? value : parseInt(value);
 });
 
 updateClient(id, updates); 
