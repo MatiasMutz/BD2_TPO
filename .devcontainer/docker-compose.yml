@@ -23,4 +23,4 @@ services:
       - "7474:7474" # Neo4j web interface
       - "7687:7687" # Bolt protocol
     environment:
-      NEO4J_AUTH: "none" # Disable authentication
+      NEO4J_AUTH: "root/example" # Set username and password
