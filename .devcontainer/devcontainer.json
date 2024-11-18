@@ -1,16 +1,17 @@
 {
-  "name": "Node.js & MongoDB",
+  "name": "Node.js, MongoDB & Neo4j",
   "dockerComposeFile": "docker-compose.yml",
   "service": "app",
   "workspaceFolder": "/workspace",
   "extensions": [
     "ms-azuretools.vscode-docker",
-    "mongodb.mongodb-vscode"
+    "mongodb.mongodb-vscode",
+    "neo4j.neo4j-vscode-extension"
   ],
   "settings": {
     "terminal.integrated.shell.linux": "/bin/bash"
   },
-  "forwardPorts": [27017],
+  "forwardPorts": [27017, 7474, 7687],
   "postCreateCommand": "echo 'MONGODB_URI=mongodb://root:example@mongo:27017/\nNEO4J_URI=bolt://localhost:7687' > .env && npm install && node src/initDb.js",
   "remoteUser": "node"
 }
