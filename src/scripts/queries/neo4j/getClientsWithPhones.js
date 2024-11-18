@@ -1,38 +1,29 @@
-const mongoose = require('mongoose');
-const Cliente = require('../../../models/clienteModel');
-const Telefono = require('../../../models/telefonoModel');
+const neo4j = require('neo4j-driver');
 require('dotenv').config();
 
 async function getClientesConTelefonos() {
   console.log('\n🔍 Buscando clientes con sus telefonos...');
+  
   try {
-    await mongoose.connect(process.env.MONGODB_URI);
-    
-    const clientes = await Cliente.aggregate([
-      {
-        $lookup: {
-          from: 'telefonos',
-          localField: 'nro_cliente',
-          foreignField: 'nro_cliente',
-          as: 'telefonos'
-        }
-      },
-      {
-        $match: {
-          'telefonos': { $ne: [] }
-        }
-      }
-    ]);
+    const session = await connectNeo4jDatabase();
 
-    if (clientes.length === 0) {
+    const result = await session.run(`
+      MATCH (c:Cliente)-[:TIENE]->(t:Telefono)
+      RETURN c, collect(t) as telefonos
+    `);
+
+    if (result.records.length === 0) {
       console.log('\n❌ No se encontraron clientes con teléfonos');
       return;
     }
 
-    clientes.forEach(cliente => {
+    result.records.forEach(record => {
+      const cliente = record.get('c').properties;
+      const telefonos = record.get('telefonos').map(t => t.properties);
+
       console.log(`👤 ${cliente.nombre} ${cliente.apellido} (${cliente.activo})`);
       console.log(`📍 Dirección: ${cliente.direccion}`);
-      cliente.telefonos.forEach(telefono => {
+      telefonos.forEach(telefono => {
         console.log(`📞 Teléfono: (${telefono.codigo_area}) ${telefono.nro_telefono} (${telefono.tipo})`);
       });
       console.log('------------------------');
@@ -41,7 +32,8 @@ async function getClientesConTelefonos() {
   } catch (error) {
     console.error('❌ Error:', error);
   } finally {
-    await mongoose.connection.close();
+    await session.close();
+    await driver.close();
   }
 }
 

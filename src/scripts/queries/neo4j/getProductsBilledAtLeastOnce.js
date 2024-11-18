@@ -1,48 +1,37 @@
-const mongoose = require('mongoose');
-const Factura = require('../../../models/detalleFacturaModel');
-const Producto = require('../../../models/productoModel');
+const neo4j = require('neo4j-driver');
 require('dotenv').config();
 
 async function getProductsBilledAtLeastOnce() {
     console.log('\n🔍 Buscando productos con por lo menos una factura...');
+    
     try {
-        await mongoose.connect(process.env.MONGODB_URI);
+        const session = await connectNeo4jDatabase();
 
-        const productos = await Producto.aggregate([
-            {
-                $lookup: {
-                    from: 'detallefacturas',
-                    localField: 'codigo_producto',
-                    foreignField: 'codigo_producto',
-                    as: 'detallefacturas'
-                }
-            },
-            {
-                $match: {
-                    detalleFacturas: {  $not: { $size: 0 } }
-                }
-            },
-        ]);
+        const result = await session.run(`
+            MATCH (p:Producto)<-[:INCLUYE]-(df:DetalleFactura)
+            RETURN DISTINCT p
+        `);
 
-        if (!productos.length) {
+        if (result.records.length === 0) {
             console.log('✅ No hay ningun producto con factura');
             return;
         }
 
-        console.log(`📋 Se encontraron ${productos.length} facturados al menos una vez:\n\n`);
-
+        console.log(`📋 Se encontraron ${result.records.length} facturados al menos una vez:\n\n`);
+        
         console.log('--------------------------');
-        productos.forEach(producto => {
+        result.records.forEach(record => {
+            const producto = record.get('p').properties;
             console.log(`${producto.nombre}`);
-            
             console.log('--------------------------');
         });
 
     } catch (error) {
         console.error('❌ Error:', error);
     } finally {
-        await mongoose.connection.close();
+        await session.close();
+        await driver.close();
     }
-    
 }
+
 getProductsBilledAtLeastOnce();

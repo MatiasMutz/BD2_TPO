@@ -10,7 +10,7 @@
     "clean": "node src/initDb.js",
     "mongo-help": "node src/scripts/mongoHelp.js",
     "neo4j-help": "node src/scripts/neo4jHelp.js",
-    "help": "node src/scripts/mongoHelp.js && node src/scripts/neo4jHelp.js",
+    "help": "node src/scripts/help.js",
     "m1": "node src/scripts/queries/mongo/getClientsWithPhones.js",
     "m2": "node src/scripts/queries/mongo/getJacobCopperData.js",
     "m3": "node src/scripts/queries/mongo/getPhonesWithClientData.js",

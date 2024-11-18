@@ -13,7 +13,6 @@ function cleanFiles() {
 
 function createConstraints() {
     fs.appendFileSync('1_constraints.cypher', `CREATE CONSTRAINT FOR (c:Cliente) REQUIRE c.nro_cliente IS UNIQUE;\n`);
-    fs.appendFileSync('1_constraints.cypher', `CREATE CONSTRAINT FOR (t:Telefono) REQUIRE t.nro_cliente IS UNIQUE;\n`);
     fs.appendFileSync('1_constraints.cypher', `CREATE CONSTRAINT FOR (f:Factura) REQUIRE f.nro_factura IS UNIQUE;\n`);
     fs.appendFileSync('1_constraints.cypher', `CREATE CONSTRAINT FOR (p:Producto) REQUIRE p.codigo_producto IS UNIQUE;\n`);
 }

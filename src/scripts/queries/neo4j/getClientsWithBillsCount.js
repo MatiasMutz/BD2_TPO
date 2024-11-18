@@ -1,55 +1,40 @@
-const mongoose = require('mongoose');
-const Cliente = require('../../../models/clienteModel');
+const neo4j = require('neo4j-driver');
 require('dotenv').config();
 
 async function getClientsWithBillsCount() {
     console.log('\n🔍 Obteniendo clientes con su cantidad de facturas...');
+    
     try {
-        await mongoose.connect(process.env.MONGODB_URI);
+        const session = await connectNeo4jDatabase();
 
-        const clientes = await Cliente.aggregate([
-            {
-                $lookup: {
-                    from: 'facturas',
-                    localField: 'nro_cliente',
-                    foreignField: 'nro_cliente',
-                    as: 'facturas'
-                }
-            },
-            {
-                $project: {
-                    _id: 0,
-                    nro_cliente: 1,
-                    nombre: 1,
-                    apellido: 1,
-                    cantidad_facturas: { $size: '$facturas' }
-                }
-            },
-            {
-                $sort: {
-                    cantidad_facturas: -1
-                }
-            }
-        ]);
+        const result = await session.run(`
+            MATCH (c:Cliente)
+            OPTIONAL MATCH (c)-[:TIENE_FACTURA]->(f:Factura)
+            WITH c, count(f) as cantidad_facturas
+            RETURN c.nombre as nombre, c.apellido as apellido, 
+                   c.nro_cliente as nro_cliente, cantidad_facturas
+            ORDER BY cantidad_facturas DESC
+        `);
 
-        if (!clientes.length) {
+        if (result.records.length === 0) {
             console.log('❌ No se encontraron clientes');
             return;
         }
 
-        console.log(`📋 Se encontraron ${clientes.length} clientes\n\n`);
-        
+        console.log(`📋 Se encontraron ${result.records.length} clientes\n\n`);
         console.log('--------------------------');
-        clientes.forEach(cliente => {
-            console.log(`👤 ${cliente.apellido}, ${cliente.nombre}`);
-            console.log(`📊 Cantidad de facturas: ${cliente.cantidad_facturas}`);
+        
+        result.records.forEach(record => {
+            console.log(`👤 ${record.get('apellido')}, ${record.get('nombre')}`);
+            console.log(`📊 Cantidad de facturas: ${record.get('cantidad_facturas').low}`);
             console.log('--------------------------');
         });
 
     } catch (error) {
         console.error('❌ Error:', error);
     } finally {
-        await mongoose.connection.close();
+        await session.close();
+        await driver.close();
     }
 }
 

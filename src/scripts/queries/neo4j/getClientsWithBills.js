@@ -1,39 +1,29 @@
-const mongoose = require('mongoose');
-const Cliente = require('../../../models/clienteModel');
-const Factura = require('../../../models/facturaModel');
-const Telefono = require('../../../models/telefonoModel');
+const neo4j = require('neo4j-driver');
 require('dotenv').config();
 
 async function getClientsWithBills() {
     console.log('\n🔍 Buscando clientes con facturas...');
+    
     try {
-        await mongoose.connect(process.env.MONGODB_URI);
+        const session = await connectNeo4jDatabase();
 
-        const clientes = await Cliente.aggregate([
-            {
-                $lookup: {
-                    from: 'facturas',
-                    localField: 'nro_cliente',
-                    foreignField: 'nro_cliente',
-                    as: 'facturas'
-                }
-            },
-            {
-                $match: {
-                    'facturas': { $ne: [] }
-                }
-            },
-        ]);
+        const result = await session.run(`
+            MATCH (c:Cliente)-[:TIENE_FACTURA]->(f:Factura)
+            WITH c, collect(f) as facturas
+            WHERE size(facturas) > 0
+            RETURN c
+        `);
 
-        if (!clientes.length) {
+        if (result.records.length === 0) {
             console.log('❌ No hay clientes con facturas');
             return;
         }
 
-        console.log(`📋 Se encontraron ${clientes.length} clientes con facturas:\n\n`);
-
+        console.log(`📋 Se encontraron ${result.records.length} clientes con facturas:\n\n`);
         console.log('--------------------------');
-        clientes.forEach(cliente => {
+        
+        result.records.forEach(record => {
+            const cliente = record.get('c').properties;
             console.log(`👤 ${cliente.nombre} ${cliente.apellido}`);
             console.log(`📄 Número de cliente: ${cliente.nro_cliente}`);
             console.log(`📍 Dirección: ${cliente.direccion}`);
@@ -43,7 +33,8 @@ async function getClientsWithBills() {
     } catch (error) {
         console.error('❌ Error:', error);
     } finally {
-        await mongoose.connection.close();
+        await session.close();
+        await driver.close();
     }
 }
 

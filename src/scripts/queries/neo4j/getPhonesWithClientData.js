@@ -1,46 +1,38 @@
-const mongoose = require('mongoose');
-const Cliente = require('../../../models/clienteModel');
-const Telefono = require('../../../models/telefonoModel');
+const neo4j = require('neo4j-driver');
 require('dotenv').config();
 
 async function getPhonesWithClientsData() {
-    console.log('\n🔍 Buscando telefonos con sus datos de cliente...');
+    console.log('\n🔍 Buscando teléfonos con sus datos de cliente...');
+    
     try {
-        await mongoose.connect(process.env.MONGODB_URI);
+        const session = await connectNeo4jDatabase();
 
-        const telefonos = await Telefono.aggregate([
-            {
-                $lookup: {
-                    from: 'clientes',              
-                    localField: 'nro_cliente',
-                    foreignField: 'nro_cliente',
-                    as: 'cliente'
-                }
-            },
-            {
-                $match: {
-                    'cliente': { $ne: [] }         
-                }
-            }
-        ]);
-      
-        if (telefonos.length === 0) {
+        const result = await session.run(`
+            MATCH (c:Cliente)-[:TIENE]->(t:Telefono)
+            RETURN t, c
+        `);
+
+        if (result.records.length === 0) {
             console.log('\n❌ No se encontraron teléfonos');
             return;
         }
-      
-        telefonos.forEach(telefono => {
+
+        result.records.forEach(record => {
+            const telefono = record.get('t').properties;
+            const cliente = record.get('c').properties;
+
             console.log(`📞 Teléfono: ${telefono.nro_telefono}`);
-            console.log(`👤 Nombre: ${telefono.cliente[0].nombre} ${telefono.cliente[0].apellido} (${telefono.cliente[0].activo})`);
-            console.log(`📍 Dirección: ${telefono.cliente[0].direccion}`);
+            console.log(`👤 Nombre: ${cliente.nombre} ${cliente.apellido} (${cliente.activo})`);
+            console.log(`📍 Dirección: ${cliente.direccion}`);
             console.log('------------------------');
         });
-      
+
     } catch (error) {
         console.error('❌ Error:', error);
     } finally {
-        await mongoose.connection.close();
+        await session.close();
+        await driver.close();
     }
-
 }
+
 getPhonesWithClientsData();

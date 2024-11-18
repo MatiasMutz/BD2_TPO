@@ -1,38 +1,27 @@
-const mongoose = require('mongoose');
-const Factura = require('../../../models/facturaModel');
+const neo4j = require('neo4j-driver');
 require('dotenv').config();
 
-async function getClientsWithBillsCount() {
-    console.log('\n🔍 Obteniendo clientes con su cantidad de facturas...');
+async function getKaiBullockBills() {
+    console.log('\n🔍 Obteniendo facturas de Kai Bullock...');
+    
     try {
-        await mongoose.connect(process.env.MONGODB_URI);
+        const session = await connectNeo4jDatabase();
 
-        const facturas = await Factura.aggregate([
-            {
-                $lookup: {
-                    from: 'clientes',
-                    localField: 'nro_cliente',
-                    foreignField: 'nro_cliente',
-                    as: 'cliente'
-                }
-            },
-            {
-                $match: {
-                    'cliente.nombre': 'Kai',
-                    'cliente.apellido': 'Bullock'
-                }
-            },
-        ]);
+        const result = await session.run(`
+            MATCH (c:Cliente {nombre: 'Kai', apellido: 'Bullock'})-[:TIENE_FACTURA]->(f:Factura)
+            RETURN f
+        `);
 
-        if (!facturas.length) {
+        if (result.records.length === 0) {
             console.log('❌ No se encontraron facturas de Kai Bullock');
             return;
         }
 
-        console.log(`📋 Se encontraron ${facturas.length} facturas de Kai Bullock\n\n`);
+        console.log(`📋 Se encontraron ${result.records.length} facturas de Kai Bullock\n\n`);
         
         console.log('--------------------------');
-        facturas.forEach(factura => {
+        result.records.forEach(record => {
+            const factura = record.get('f').properties;
             console.log(`📄 Número de factura: ${factura.nro_factura}`);
             console.log(`📅 Fecha: ${factura.fecha}`);
             console.log(`💵 Total sin IVA: ${factura.total_sin_iva}`);
@@ -44,8 +33,9 @@ async function getClientsWithBillsCount() {
     } catch (error) {
         console.error('❌ Error:', error);
     } finally {
-        await mongoose.connection.close();
+        await session.close();
+        await driver.close();
     }
 }
 
-getClientsWithBillsCount(); 
+getKaiBullockBills(); 
