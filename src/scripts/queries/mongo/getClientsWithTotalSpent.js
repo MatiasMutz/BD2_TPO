@@ -44,16 +44,11 @@ async function getClientsWithTotalSpent(){
             console.log('❌ Error');
             return;
         }
-
-        
-
         console.log('--------------------------');
         clientes.forEach(cliente => {
             console.log(`👤 ${cliente.nombre} ${cliente.apellido}`);
             console.log(`Total: $${cliente.totalFacturas}`);
-            
         });
-
     } catch (error) {
         console.error('❌ Error:', error);
     } finally {

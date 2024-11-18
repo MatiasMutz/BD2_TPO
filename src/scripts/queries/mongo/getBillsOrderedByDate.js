@@ -11,7 +11,6 @@ async function createBillsOrderedByDateView() {
             await db.dropCollection('vista_facturas_ordenadas');
             console.log('🗑️ Vista anterior eliminada');
         } catch (e) {
-            // Si la vista no existe, simplemente continuamos
         }
 
         await db.createCollection('vista_facturas_ordenadas', {

@@ -7,7 +7,6 @@ async function updateProduct(codigo_producto, updates) {
     try {
         await mongoose.connect(process.env.MONGODB_URI);
 
-        // Verificar si el cliente existe antes de intentar actualizarlo
         const productoExistente = await Producto.findOne({ codigo_producto });
         
         if (!productoExistente) {
@@ -34,7 +33,6 @@ async function updateProduct(codigo_producto, updates) {
     }
 }
 
-// Obtener argumentos de la línea de comandos
 const args = process.argv.slice(2);
 if (args.length < 2) {
     console.error('❌ Se requiere al menos 2 argumentos: nro_producto y al menos un campo a modificar');
@@ -43,7 +41,6 @@ if (args.length < 2) {
 
 const [id, ...fields] = args;
 
-// Convertir los campos a un objeto de actualizaciones
 const updates = {};
 fields.forEach(field => {
     const [key, value] = field.split('=');
