@@ -30,7 +30,7 @@ async function connectNeo4jDatabase() {
     );
     const session = driver.session();
     console.log('✅ Conexión exitosa con Neo4j');
-    return session;
+    return { session, driver };
   } catch (error) {
     console.error('❌ Error conectando a Neo4j:', error);
     throw error;
@@ -68,9 +68,12 @@ async function seedMongoDatabase() {
 
 async function seedNeo4jDatabase() {
   console.log('🚀 Iniciando inicialización de la base de datos Neo4j');
-  const session = await connectNeo4jDatabase();
+  let session, driver;
   
   try {
+    const connection = await connectNeo4jDatabase();
+    session = connection.session;
+    driver = connection.driver;
     
     await session.run('MATCH (n) DETACH DELETE n');
     console.log('🗑️  Base de datos eliminada');
@@ -136,17 +139,26 @@ async function seedNeo4jDatabase() {
       );
     }
     
-    console.log('✅ Base de datos de Neo4J inicializada con éxito');
+    console.log('✅ Base de datos inicializada con éxito');
   } catch (error) {
     console.error('❌ Error al inicializar la base de datos:', error);
   } finally {
-    await session.close();
+    if (session) await session.close();
+    if (driver) await driver.close();
+    console.log('👋 Conexión con Neo4j cerrada');
   }
 }
 
 async function initializeDatabases() {
-  await seedMongoDatabase();
-  await seedNeo4jDatabase();
+  try {
+    await seedMongoDatabase(); 
+    await seedNeo4jDatabase();
+    console.log('✅ Proceso de inicialización completado');
+    process.exit(0);
+  } catch (error) {
+    console.error('❌ Error durante la inicialización:', error);
+    process.exit(1);
+  }
 }
 
 initializeDatabases();
