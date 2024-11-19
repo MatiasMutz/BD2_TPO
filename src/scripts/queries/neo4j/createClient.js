@@ -1,5 +1,7 @@
 const neo4j = require('neo4j-driver');
 require('dotenv').config();
+const { connectNeo4jDatabase } = require('../../../utils/dataLoader');
+
 
 async function createClient(nro_cliente, nombre, apellido, direccion, activo) {
   console.log('\n🔍 Creando un nuevo cliente...');

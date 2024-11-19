@@ -68,9 +68,9 @@ async function seedMongoDatabase() {
 
 async function seedNeo4jDatabase() {
   console.log('🚀 Iniciando inicialización de la base de datos Neo4j');
+  const session = await connectNeo4jDatabase();
   
   try {
-    const session = await connectNeo4jDatabase();
     
     await session.run('MATCH (n) DETACH DELETE n');
     console.log('🗑️  Base de datos eliminada');
@@ -83,7 +83,7 @@ async function seedNeo4jDatabase() {
     
     for (const cliente of clientesData) {
       await session.run(
-        `CREATE (c:Cliente {nro_cliente: $nro_cliente, nombre: $nombre, apellido: $apellido, direccion: $direccion}, activo: $activo)`,
+        `CREATE (c:Cliente {nro_cliente: $nro_cliente, nombre: $nombre, apellido: $apellido, direccion: $direccion, activo: $activo})`,
         cliente
       );
     }
@@ -136,7 +136,7 @@ async function seedNeo4jDatabase() {
       );
     }
     
-    console.log('✅ Base de datos inicializada con éxito');
+    console.log('✅ Base de datos de Neo4J inicializada con éxito');
   } catch (error) {
     console.error('❌ Error al inicializar la base de datos:', error);
   } finally {
@@ -145,7 +145,7 @@ async function seedNeo4jDatabase() {
 }
 
 async function initializeDatabases() {
-  await seedMongoDatabase(); 
+  await seedMongoDatabase();
   await seedNeo4jDatabase();
 }
 

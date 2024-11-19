@@ -1,5 +1,6 @@
 const neo4j = require('neo4j-driver');
 require('dotenv').config();
+const { connectNeo4jDatabase } = require('../../../utils/dataLoader');
 
 async function getClientesConTelefonos() {
   console.log('\n🔍 Buscando clientes con sus telefonos...');
@@ -32,8 +33,6 @@ async function getClientesConTelefonos() {
   } catch (error) {
     console.error('❌ Error:', error);
   } finally {
-    await session.close();
-    await driver.close();
   }
 }
 

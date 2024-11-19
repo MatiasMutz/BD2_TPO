@@ -1,5 +1,6 @@
 const neo4j = require('neo4j-driver');
 require('dotenv').config();
+const { connectNeo4jDatabase } = require('./../utils/dataLoader');
 
 async function updateProduct(codigo_producto, updates) {
   console.log('\n🔍 Modificando producto...');

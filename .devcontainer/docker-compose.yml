@@ -19,8 +19,9 @@ services:
 
   neo4j:
     image: neo4j:latest
+    container_name: neo4j
     ports:
       - "7474:7474" # Neo4j web interface
       - "7687:7687" # Bolt protocol
     environment:
-      NEO4J_AUTH: "root/example" # Set username and password
+      NEO4J_AUTH: "neo4j/sets-centimeters-particle"

@@ -1,5 +1,6 @@
 const neo4j = require('neo4j-driver');
 require('dotenv').config();
+const { connectNeo4jDatabase } = require('../../../utils/dataLoader');
 
 async function getProductsBilledAtLeastOnce() {
     console.log('\n🔍 Buscando productos con por lo menos una factura...');

@@ -1,5 +1,6 @@
 const fs = require('fs');
 const csv = require('csv-parse/sync');
+const neo4j = require('neo4j-driver');
 
 async function loadClientesFromCSV() {
     const fileContent = fs.readFileSync('Datasets/e01_cliente.csv', { encoding: 'latin1' });
@@ -86,10 +87,27 @@ async function loadClientesFromCSV() {
     }));
 }
 
+async function connectNeo4jDatabase() {
+  try {
+    const driver = neo4j.driver(
+      process.env.NEO4J_URI,
+      neo4j.auth.basic(process.env.NEO4J_USER, process.env.NEO4J_PASSWORD),
+      { encrypted: 'ENCRYPTION_OFF' }
+    );
+    const session = driver.session();
+    console.log('✅ Conexión exitosa con Neo4j');
+    return session;
+  } catch (error) {
+    console.error('❌ Error conectando a Neo4j:', error);
+    throw error;
+  }
+}
+
 module.exports = {
     loadClientesFromCSV,
     loadDetalleFacturaFromCSV,
     loadFacturasFromCSV,
     loadProductosFromCSV,
-    loadTelefonosFromCSV
+    loadTelefonosFromCSV,
+    connectNeo4jDatabase
 };
