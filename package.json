@@ -30,6 +30,7 @@
     "m14.1": "node src/scripts/queries/mongo/createProduct.js",
     "m14.2": "node src/scripts/queries/mongo/updateProduct.js",
     "neo4j-seed": "node src/initNeo4JDb.js",
+    "test-neo4j-connection": "node src/testNeo4jConnection.js",
     "n1": "node src/scripts/queries/neo4j/getClientsWithPhones.js",
     "n2": "node src/scripts/queries/neo4j/getJacobCopperData.js",
     "n3": "node src/scripts/queries/neo4j/getPhonesWithClientData.js",
