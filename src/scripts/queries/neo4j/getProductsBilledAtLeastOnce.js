@@ -13,7 +13,7 @@ async function getProductsBilledAtLeastOnce() {
         driver = connection.driver;
 
         const result = await session.run(`
-            MATCH (p:Producto)<-[:INCLUYE]-(df:DetalleFactura)
+            MATCH (p:Producto)<-[:TIENE_PRODUCTO]-(df:DetalleFactura)
             RETURN DISTINCT p
         `);
 

@@ -13,7 +13,7 @@ async function getPhonesWithClientsData() {
         driver = connection.driver;
 
         const result = await session.run(`
-            MATCH (c:Cliente)-[:TIENE]->(t:Telefono)
+            MATCH (c:Cliente)-[:TIENE_TELEFONO]->(t:Telefono)
             RETURN t, c
         `);
 

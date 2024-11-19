@@ -13,7 +13,7 @@ async function getBillsWithIpsumProducts() {
     driver = connection.driver;
 
     const result = await session.run(`
-      MATCH (f:Factura)-[:CONTIENE]->(p:Producto)
+      MATCH (f:Factura)-[:TIENE_PRODUCTO]->(p:Producto)
       WHERE p.marca = 'Ipsum'
       RETURN f, collect(p) as productos
     `);

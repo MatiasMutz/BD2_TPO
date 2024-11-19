@@ -13,7 +13,7 @@ async function getJacobCopperData() {
         driver = connection.driver;
 
         const result = await session.run(`
-            MATCH (c:Cliente {nombre: 'Jacob', apellido: 'Cooper'})-[:TIENE]->(t:Telefono)
+            MATCH (c:Cliente {nombre: 'Jacob', apellido: 'Cooper'})-[:TIENE_TELEFONO]->(t:Telefono)
             RETURN c, collect(t) as telefonos
         `);
 
