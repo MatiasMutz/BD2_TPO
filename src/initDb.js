@@ -98,7 +98,7 @@ async function seedNeo4jDatabase() {
       );
 
       await session.run(
-        'MATCH (c:Cliente {nro_cliente: $nro_cliente}), (t:Telefono {nro_cliente: $nro_cliente}) MERGE (c)-[:TIENE_TELEFONO]->(t)',
+        'MATCH (c:Cliente {nro_cliente: $nro_cliente}), (t:Telefono {nro_cliente: $nro_cliente, nro_telefono: $nro_telefono}) CREATE (c)-[:TIENE_TELEFONO]->(t)',
         telefono
       );
     }
@@ -110,7 +110,7 @@ async function seedNeo4jDatabase() {
       );
 
       await session.run(
-        'MATCH (c:Cliente {nro_cliente: $nro_cliente}), (f:Factura {nro_factura: $nro_factura}) MERGE (c)-[:TIENE_FACTURA]->(f)',
+        'MATCH (c:Cliente {nro_cliente: $nro_cliente}), (f:Factura {nro_factura: $nro_factura}) CREATE (c)-[:TIENE_FACTURA]->(f)',
         factura
       );
     }
@@ -122,7 +122,7 @@ async function seedNeo4jDatabase() {
       );
 
       await session.run(
-        'MATCH (f:Factura {nro_factura: $nro_factura}), (df:DetalleFactura {nro_factura: $nro_factura, codigo_producto: $codigo_producto, nro_item: $nro_item, cantidad: $cantidad}) MERGE (f)-[:TIENE_DETALLE_FACTURA]->(df)',
+        'MATCH (f:Factura {nro_factura: $nro_factura}), (df:DetalleFactura {nro_factura: $nro_factura, codigo_producto: $codigo_producto, nro_item: $nro_item, cantidad: $cantidad}) CREATE (f)-[:TIENE_DETALLE_FACTURA]->(df)',
         detalleFactura
       );
     }
@@ -134,7 +134,7 @@ async function seedNeo4jDatabase() {
       );
 
       await session.run(
-        'MATCH (p:Producto {codigo_producto: $codigo_producto}), (df:DetalleFactura {codigo_producto: $codigo_producto}) MERGE (df)-[:TIENE_PRODUCTO]->(p)',
+        'MATCH (p:Producto {codigo_producto: $codigo_producto}), (df:DetalleFactura {codigo_producto: $codigo_producto}) CREATE (df)-[:TIENE_PRODUCTO]->(p)',
         producto
       );
     }
