@@ -5,8 +5,12 @@ const { connectNeo4jDatabase } = require('../../../utils/dataLoader');
 async function getPhonesWithClientsData() {
     console.log('\n🔍 Buscando teléfonos con sus datos de cliente...');
     
+    let session, driver;
+    
     try {
-        const session = await connectNeo4jDatabase();
+        const connection = await connectNeo4jDatabase();
+        session = connection.session;
+        driver = connection.driver;
 
         const result = await session.run(`
             MATCH (c:Cliente)-[:TIENE]->(t:Telefono)
@@ -31,8 +35,8 @@ async function getPhonesWithClientsData() {
     } catch (error) {
         console.error('❌ Error:', error);
     } finally {
-        await session.close();
-        await driver.close();
+        if (session) await session.close();
+        if (driver) await driver.close();
     }
 }
 

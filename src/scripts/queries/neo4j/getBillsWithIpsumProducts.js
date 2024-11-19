@@ -5,8 +5,12 @@ const { connectNeo4jDatabase } = require('../../../utils/dataLoader');
 async function getBillsWithIpsumProducts() {
   console.log('\n🔍 Obteniendo facturas con productos Ipsum...');
   
+  let session, driver;
+  
   try {
-    const session = await connectNeo4jDatabase();
+    const connection = await connectNeo4jDatabase();
+    session = connection.session;
+    driver = connection.driver;
 
     const result = await session.run(`
       MATCH (f:Factura)-[:CONTIENE]->(p:Producto)
@@ -36,8 +40,8 @@ async function getBillsWithIpsumProducts() {
   } catch (error) {
     console.error('❌ Error:', error);
   } finally {
-    await session.close();
-    await driver.close();
+    if (session) await session.close();
+    if (driver) await driver.close();
   }
 }
 

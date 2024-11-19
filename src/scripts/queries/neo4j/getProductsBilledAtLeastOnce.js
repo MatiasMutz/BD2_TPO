@@ -5,8 +5,12 @@ const { connectNeo4jDatabase } = require('../../../utils/dataLoader');
 async function getProductsBilledAtLeastOnce() {
     console.log('\n🔍 Buscando productos con por lo menos una factura...');
     
+    let session, driver;
+    
     try {
-        const session = await connectNeo4jDatabase();
+        const connection = await connectNeo4jDatabase();
+        session = connection.session;
+        driver = connection.driver;
 
         const result = await session.run(`
             MATCH (p:Producto)<-[:INCLUYE]-(df:DetalleFactura)
@@ -30,8 +34,8 @@ async function getProductsBilledAtLeastOnce() {
     } catch (error) {
         console.error('❌ Error:', error);
     } finally {
-        await session.close();
-        await driver.close();
+        if (session) await session.close();
+        if (driver) await driver.close();
     }
 }
 

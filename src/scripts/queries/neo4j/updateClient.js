@@ -5,8 +5,12 @@ const { connectNeo4jDatabase } = require('../../../utils/dataLoader');
 async function updateClient(nro_cliente, updates) {
   console.log('\n🔍 Modificando cliente...');
   
+  let session, driver;
+  
   try {
-    const session = await connectNeo4jDatabase();
+    const connection = await connectNeo4jDatabase();
+    session = connection.session;
+    driver = connection.driver;
 
     const checkResult = await session.run(`
       MATCH (c:Cliente {nro_cliente: $nro_cliente})
@@ -43,8 +47,8 @@ async function updateClient(nro_cliente, updates) {
   } catch (error) {
     console.error('❌ Error al modificar el cliente:', error);
   } finally {
-    await session.close();
-    await driver.close();
+    if (session) await session.close();
+    if (driver) await driver.close();
   }
 }
 

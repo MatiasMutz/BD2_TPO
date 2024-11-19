@@ -5,8 +5,12 @@ const { connectNeo4jDatabase } = require('../../../utils/dataLoader');
 async function getClientsWithBills() {
     console.log('\n🔍 Buscando clientes con facturas...');
     
+    let session, driver;
+
     try {
-        const session = await connectNeo4jDatabase();
+        const connection = await connectNeo4jDatabase();
+        session = connection.session;
+        driver = connection.driver;
 
         const result = await session.run(`
             MATCH (c:Cliente)-[:TIENE_FACTURA]->(f:Factura)
@@ -34,8 +38,8 @@ async function getClientsWithBills() {
     } catch (error) {
         console.error('❌ Error:', error);
     } finally {
-        await session.close();
-        await driver.close();
+        if (session) await session.close();
+        if (driver) await driver.close();
     }
 }
 

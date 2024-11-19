@@ -5,9 +5,13 @@ const { connectNeo4jDatabase } = require('../../../utils/dataLoader');
 
 async function createClient(nro_cliente, nombre, apellido, direccion, activo) {
   console.log('\n🔍 Creando un nuevo cliente...');
+
+  let session, driver;
   
   try {
-    const session = await connectNeo4jDatabase();
+    const connection = await connectNeo4jDatabase();
+    session = connection.session;
+    driver = connection.driver;
 
     const result = await session.run(`
       CREATE (c:Cliente {
@@ -34,8 +38,8 @@ async function createClient(nro_cliente, nombre, apellido, direccion, activo) {
   } catch (error) {
     console.error('❌ Error al crear el cliente:', error);
   } finally {
-    await session.close();
-    await driver.close();
+    if (session) await session.close();
+    if (driver) await driver.close();
   }
 }
 

@@ -5,8 +5,12 @@ const { connectNeo4jDatabase } = require('./../utils/dataLoader');
 async function updateProduct(codigo_producto, updates) {
   console.log('\n🔍 Modificando producto...');
   
+  let session, driver;
+  
   try {
-    const session = await connectNeo4jDatabase();
+    const connection = await connectNeo4jDatabase();
+    session = connection.session;
+    driver = connection.driver;
 
     const checkResult = await session.run(`
       MATCH (p:Producto {codigo_producto: $codigo_producto})
@@ -43,8 +47,8 @@ async function updateProduct(codigo_producto, updates) {
   } catch (error) {
     console.error('❌ Error al modificar el producto:', error);
   } finally {
-    await session.close();
-    await driver.close();
+    if (session) await session.close();
+    if (driver) await driver.close();
   }
 }
 

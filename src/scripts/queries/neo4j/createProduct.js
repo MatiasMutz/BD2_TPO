@@ -5,8 +5,12 @@ const { connectNeo4jDatabase } = require('../../../utils/dataLoader');
 async function createProduct(codigo_producto, nombre, marca, descripcion, precio, stock) {
   console.log('\n🔍 Creando un nuevo producto...');
   
+  let session, driver;
+  
   try {
-    const session = await connectNeo4jDatabase();
+    const connection = await connectNeo4jDatabase();
+    session = connection.session;
+    driver = connection.driver;
 
     const result = await session.run(`
       CREATE (p:Producto {
@@ -35,8 +39,8 @@ async function createProduct(codigo_producto, nombre, marca, descripcion, precio
   } catch (error) {
     console.error('❌ Error al crear el producto:', error);
   } finally {
-    await session.close();
-    await driver.close();
+    if (session) await session.close();
+    if (driver) await driver.close();
   }
 }
 
