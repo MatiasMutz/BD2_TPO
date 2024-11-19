@@ -96,7 +96,7 @@ async function connectNeo4jDatabase() {
     );
     const session = driver.session();
     console.log('✅ Conexión exitosa con Neo4j');
-    return session;
+    return { session, driver };
   } catch (error) {
     console.error('❌ Error conectando a Neo4j:', error);
     throw error;

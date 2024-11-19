@@ -33,6 +33,8 @@ async function getClientesConTelefonos() {
   } catch (error) {
     console.error('❌ Error:', error);
   } finally {
+    await session.close();
+    await driver.close();
   }
 }
 
