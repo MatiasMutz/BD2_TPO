@@ -21,6 +21,11 @@ async function getClientesConTelefonos() {
         $match: {
           'telefonos': { $ne: [] }
         }
+      },
+      {
+        $sort: {
+          'nombre': 1
+        }
       }
     ]);
 

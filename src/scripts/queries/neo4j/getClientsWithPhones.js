@@ -14,7 +14,8 @@ async function getClientesConTelefonos() {
 
     const result = await session.run(`
         MATCH (c:Cliente)-[:TIENE_TELEFONO]->(t:Telefono)
-        RETURN c, collect(DISTINCT t) as telefonos
+        RETURN c, collect(t) as telefonos
+        ORDER BY c.nombre ASC
     `);
 
     if (result.records.length === 0) {
